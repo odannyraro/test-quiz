@@ -119,3 +119,23 @@ def test_exceeded_quantity_of_selected_choices():
     with pytest.raises(Exception):
         question.correct_selected_choices([1,2])
 
+@pytest.fixture
+def question_for_removal() -> Question:
+    question = Question(title='q1', points=14)
+    question.add_choice('a', False)
+    question.add_choice('b', False)
+    question.add_choice('c', False)
+    question.add_choice('d', True)
+    return question
+
+def test_remove_choices_manually(question_for_removal):
+    ids = []
+    for choice in question_for_removal.choices:
+        ids.append(choice.id)
+    for id in ids:
+        question_for_removal.remove_choice_by_id(id)
+    assert not question_for_removal.choices
+
+def test_remove_all_choices(question_for_removal):
+    question_for_removal.remove_all_choices()
+    assert not question_for_removal.choices
